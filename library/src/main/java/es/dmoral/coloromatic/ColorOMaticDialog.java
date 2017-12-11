@@ -75,6 +75,7 @@ public class ColorOMaticDialog extends DialogFragment {
                     getArguments().getInt(ARG_INITIAL_COLOR),
                     getArguments().getBoolean(ARG_SHOW_COLOR_INDICATOR),
                     isShowSlider(),
+                    isShowButton(),
                     ColorMode.values()[
                             getArguments().getInt(ARG_COLOR_MODE_ID)],
                     IndicatorMode.values()[
@@ -85,6 +86,7 @@ public class ColorOMaticDialog extends DialogFragment {
                     savedInstanceState.getInt(ARG_INITIAL_COLOR, ColorOMaticView.DEFAULT_COLOR),
                     savedInstanceState.getBoolean(ARG_SHOW_COLOR_INDICATOR),
                     isShowSlider(),
+                    isShowButton(),
                     ColorMode.values()[
                             savedInstanceState.getInt(ARG_COLOR_MODE_ID)],
                     IndicatorMode.values()[
@@ -92,53 +94,20 @@ public class ColorOMaticDialog extends DialogFragment {
                     getActivity());
         }
 
-        if (isShowButton()) {
-            colorOMaticView.enableButtonBar(new ColorOMaticView.ButtonBarListener() {
-                @Override
-                public void onPositiveButtonClick(int color) {
-                    if (listener != null) listener.onColorSelected(color);
-                    dismiss();
-                }
+        colorOMaticView.enableButtonBar(new ColorOMaticView.ButtonBarListener() {
+            @Override
+            public void onPositiveButtonClick(int color) {
+                if (listener != null) listener.onColorSelected(color);
+                dismiss();
+            }
 
-                @Override
-                public void onNegativeButtonClick() {
-                    dismiss();
-                }
-            });
-        }
+            @Override
+            public void onNegativeButtonClick() {
+                dismiss();
+            }
+        });
 
-        final AlertDialog ad = new AlertDialog.Builder(getActivity(), getTheme()).setView(colorOMaticView).create();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            ad.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialog) {
-                    measureLayout(ad);
-                }
-            });
-        } else {
-            measureLayout(ad);
-        }
-
-        return ad;
-    }
-
-    void measureLayout(AlertDialog ad) {
-        double multiplier = getResources().getConfiguration()
-                .orientation == Configuration.ORIENTATION_LANDSCAPE
-                ? getResources().getBoolean(R.bool.tablet_mode) ? 2 : 1.5
-                : 1;
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        int height = getResources().getConfiguration()
-                .orientation == Configuration.ORIENTATION_LANDSCAPE
-                ? (int) (metrics.heightPixels * 0.8)
-                : WindowManager.LayoutParams.WRAP_CONTENT;
-
-        int width = (int) (getResources().getDimensionPixelSize(R.dimen.chroma_dialog_width) * multiplier);
-
-        ad.getWindow().setLayout(width, height);
+        return new AlertDialog.Builder(getActivity(), getTheme()).setView(colorOMaticView).create();
     }
 
     @Override
