@@ -51,21 +51,23 @@ public class ColorOMaticView extends RelativeLayout {
     int currentColor;
     private IndicatorMode indicatorMode;
     private boolean showTextIndicator;
+    private boolean showSlider;
 
     public ColorOMaticView(Context context) {
-        this(DEFAULT_COLOR, DEFAULT_TEXT_INDICATOR_STATE, DEFAULT_MODE, DEFAULT_INDICATOR, context);
+        this(DEFAULT_COLOR, DEFAULT_TEXT_INDICATOR_STATE, true, DEFAULT_MODE, DEFAULT_INDICATOR, context);
     }
 
     public ColorOMaticView(@ColorInt int initialColor, ColorMode colorMode, Context context) {
-        this(initialColor, false, colorMode, DEFAULT_INDICATOR, context);
+        this(initialColor, false, true, colorMode, DEFAULT_INDICATOR, context);
     }
 
-    public ColorOMaticView(@ColorInt int initialColor, boolean showTextIndicator, ColorMode colorMode, IndicatorMode indicatorMode, Context context) {
+    public ColorOMaticView(@ColorInt int initialColor, boolean showTextIndicator, boolean showSlider, ColorMode colorMode, IndicatorMode indicatorMode, Context context) {
         super(context);
         this.indicatorMode = indicatorMode;
         this.colorMode = colorMode;
         this.currentColor = initialColor;
         this.showTextIndicator = showTextIndicator;
+        this.showSlider = showSlider;
         init();
     }
 
@@ -108,6 +110,11 @@ public class ColorOMaticView extends RelativeLayout {
 
             c.registerListener(seekBarChangeListener);
         }
+
+        if (!showSlider) {
+            channelContainer.setVisibility(View.GONE);
+        }
+
     }
 
     private void updateText(View colorView, TextView colorTextIndicator,

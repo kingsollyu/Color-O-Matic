@@ -148,22 +148,25 @@ public class MainActivity extends AppCompatActivity {
         if(mode == ColorMode.HSV) indicatorMode = IndicatorMode.DECIMAL; // cuz HEX is dumb for those
 
         new ColorOMaticDialog.Builder()
-            .initialColor(color)
-            .colorMode(mode)
-            .indicatorMode(indicatorMode) //HEX or DECIMAL;
-            .showColorIndicator(showTextIndicator)
-            .onColorSelected(new OnColorSelectedListener() {
-                @Override public void onColorSelected(int newColor) {
-                    updateTextView(newColor);
-                    updateToolbar(color, newColor);
-                    color = newColor;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setStatusBarColor(darkenColor(newColor));
+                .initialColor(color)
+                .colorMode(mode)
+                .indicatorMode(indicatorMode) //HEX or DECIMAL;
+                .showColorIndicator(showTextIndicator)
+                .showButton(false)
+                .showSlider(false)
+                .onColorSelected(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int newColor) {
+                        updateTextView(newColor);
+                        updateToolbar(color, newColor);
+                        color = newColor;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(darkenColor(newColor));
+                        }
                     }
-                }
-            })
-            .create()
-            .show(getSupportFragmentManager(), "dialog");
+                })
+                .create()
+                .show(getSupportFragmentManager(), "dialog");
     }
 
     @Override
