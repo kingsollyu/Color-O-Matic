@@ -44,6 +44,8 @@ public class ColorOMaticDialog extends DialogFragment {
 
     private OnColorSelectedListener listener;
     private ColorOMaticView colorOMaticView;
+    private boolean showSlider = true;
+    private boolean showButton = true;
 
     private static ColorOMaticDialog newInstance(@ColorInt int initialColor, ColorMode colorMode, IndicatorMode indicatorMode, boolean showColorIndicator) {
         ColorOMaticDialog fragment = new ColorOMaticDialog();
@@ -72,6 +74,7 @@ public class ColorOMaticDialog extends DialogFragment {
             colorOMaticView = new ColorOMaticView(
                     getArguments().getInt(ARG_INITIAL_COLOR),
                     getArguments().getBoolean(ARG_SHOW_COLOR_INDICATOR),
+                    isShowSlider(),
                     ColorMode.values()[
                             getArguments().getInt(ARG_COLOR_MODE_ID)],
                     IndicatorMode.values()[
@@ -81,6 +84,7 @@ public class ColorOMaticDialog extends DialogFragment {
             colorOMaticView = new ColorOMaticView(
                     savedInstanceState.getInt(ARG_INITIAL_COLOR, ColorOMaticView.DEFAULT_COLOR),
                     savedInstanceState.getBoolean(ARG_SHOW_COLOR_INDICATOR),
+                    isShowSlider(),
                     ColorMode.values()[
                             savedInstanceState.getInt(ARG_COLOR_MODE_ID)],
                     IndicatorMode.values()[
@@ -88,18 +92,20 @@ public class ColorOMaticDialog extends DialogFragment {
                     getActivity());
         }
 
-        colorOMaticView.enableButtonBar(new ColorOMaticView.ButtonBarListener() {
-            @Override
-            public void onPositiveButtonClick(int color) {
-                if (listener != null) listener.onColorSelected(color);
-                dismiss();
-            }
+        if (isShowButton()) {
+            colorOMaticView.enableButtonBar(new ColorOMaticView.ButtonBarListener() {
+                @Override
+                public void onPositiveButtonClick(int color) {
+                    if (listener != null) listener.onColorSelected(color);
+                    dismiss();
+                }
 
-            @Override
-            public void onNegativeButtonClick() {
-                dismiss();
-            }
-        });
+                @Override
+                public void onNegativeButtonClick() {
+                    dismiss();
+                }
+            });
+        }
 
         final AlertDialog ad = new AlertDialog.Builder(getActivity(), getTheme()).setView(colorOMaticView).create();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
@@ -147,6 +153,22 @@ public class ColorOMaticDialog extends DialogFragment {
         listener = null;
     }
 
+    public boolean isShowSlider() {
+        return showSlider;
+    }
+
+    public void setShowSlider(boolean showSlider) {
+        this.showSlider = showSlider;
+    }
+
+    public boolean isShowButton() {
+        return showButton;
+    }
+
+    public void setShowButton(boolean showButton) {
+        this.showButton = showButton;
+    }
+
     public static class Builder {
         private
         @ColorInt
@@ -154,6 +176,8 @@ public class ColorOMaticDialog extends DialogFragment {
         private ColorMode colorMode = ColorOMaticView.DEFAULT_MODE;
         private IndicatorMode indicatorMode = IndicatorMode.DECIMAL;
         private boolean showColorIndicator = ColorOMaticView.DEFAULT_TEXT_INDICATOR_STATE;
+        private boolean showSlider = true;
+        private boolean showButton = true;
         private OnColorSelectedListener listener = null;
 
         public Builder initialColor(@ColorInt int initialColor) {
@@ -181,9 +205,21 @@ public class ColorOMaticDialog extends DialogFragment {
             return this;
         }
 
+        public Builder showSlider(boolean showSlider) {
+            this.showSlider = showSlider;
+            return this;
+        }
+
+        public Builder showButton(boolean showButton) {
+            this.showButton = showButton;
+            return this;
+        }
+
         public ColorOMaticDialog create() {
             ColorOMaticDialog fragment = newInstance(initialColor, colorMode, indicatorMode, showColorIndicator);
             fragment.setListener(listener);
+            fragment.setShowButton(this.showButton);
+            fragment.setShowSlider(this.showSlider);
             return fragment;
         }
     }
