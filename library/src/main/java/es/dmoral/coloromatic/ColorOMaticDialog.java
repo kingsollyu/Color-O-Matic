@@ -75,6 +75,7 @@ public class ColorOMaticDialog extends DialogFragment {
                     getArguments().getInt(ARG_INITIAL_COLOR),
                     getArguments().getBoolean(ARG_SHOW_COLOR_INDICATOR),
                     isShowSlider(),
+                    isShowButton(),
                     ColorMode.values()[
                             getArguments().getInt(ARG_COLOR_MODE_ID)],
                     IndicatorMode.values()[
@@ -85,6 +86,7 @@ public class ColorOMaticDialog extends DialogFragment {
                     savedInstanceState.getInt(ARG_INITIAL_COLOR, ColorOMaticView.DEFAULT_COLOR),
                     savedInstanceState.getBoolean(ARG_SHOW_COLOR_INDICATOR),
                     isShowSlider(),
+                    isShowButton(),
                     ColorMode.values()[
                             savedInstanceState.getInt(ARG_COLOR_MODE_ID)],
                     IndicatorMode.values()[
@@ -92,20 +94,18 @@ public class ColorOMaticDialog extends DialogFragment {
                     getActivity());
         }
 
-        if (isShowButton()) {
-            colorOMaticView.enableButtonBar(new ColorOMaticView.ButtonBarListener() {
-                @Override
-                public void onPositiveButtonClick(int color) {
-                    if (listener != null) listener.onColorSelected(color);
-                    dismiss();
-                }
+        colorOMaticView.enableButtonBar(new ColorOMaticView.ButtonBarListener() {
+            @Override
+            public void onPositiveButtonClick(int color) {
+                if (listener != null) listener.onColorSelected(color);
+                dismiss();
+            }
 
-                @Override
-                public void onNegativeButtonClick() {
-                    dismiss();
-                }
-            });
-        }
+            @Override
+            public void onNegativeButtonClick() {
+                dismiss();
+            }
+        });
 
         final AlertDialog ad = new AlertDialog.Builder(getActivity(), getTheme()).setView(colorOMaticView).create();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {

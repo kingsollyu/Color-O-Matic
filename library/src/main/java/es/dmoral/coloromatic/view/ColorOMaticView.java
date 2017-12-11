@@ -52,22 +52,24 @@ public class ColorOMaticView extends RelativeLayout {
     private IndicatorMode indicatorMode;
     private boolean showTextIndicator;
     private boolean showSlider;
+    private boolean showButton = true;
 
     public ColorOMaticView(Context context) {
-        this(DEFAULT_COLOR, DEFAULT_TEXT_INDICATOR_STATE, true, DEFAULT_MODE, DEFAULT_INDICATOR, context);
+        this(DEFAULT_COLOR, DEFAULT_TEXT_INDICATOR_STATE, true, true, DEFAULT_MODE, DEFAULT_INDICATOR, context);
     }
 
     public ColorOMaticView(@ColorInt int initialColor, ColorMode colorMode, Context context) {
-        this(initialColor, false, true, colorMode, DEFAULT_INDICATOR, context);
+        this(initialColor, false, true, true, colorMode, DEFAULT_INDICATOR, context);
     }
 
-    public ColorOMaticView(@ColorInt int initialColor, boolean showTextIndicator, boolean showSlider, ColorMode colorMode, IndicatorMode indicatorMode, Context context) {
+    public ColorOMaticView(@ColorInt int initialColor, boolean showTextIndicator, boolean showSlider, boolean showButton, ColorMode colorMode, IndicatorMode indicatorMode, Context context) {
         super(context);
         this.indicatorMode = indicatorMode;
         this.colorMode = colorMode;
         this.currentColor = initialColor;
         this.showTextIndicator = showTextIndicator;
         this.showSlider = showSlider;
+        this.showButton = showButton;
         init();
     }
 
@@ -115,6 +117,9 @@ public class ColorOMaticView extends RelativeLayout {
             channelContainer.setVisibility(View.GONE);
         }
 
+        if (!showButton) {
+            findViewById(R.id.button_bar).setVisibility(View.GONE);
+        }
     }
 
     private void updateText(View colorView, TextView colorTextIndicator,
@@ -184,6 +189,11 @@ public class ColorOMaticView extends RelativeLayout {
             positiveButton.setOnClickListener(null);
             negativeButton.setOnClickListener(null);
         }
+
+        if (!showButton) {
+            buttonBar.setVisibility(GONE);
+        }
+
     }
 
     public interface ButtonBarListener {
