@@ -193,7 +193,6 @@ public class ColorOMaticView extends RelativeLayout {
         if (!showButton) {
             buttonBar.setVisibility(GONE);
         }
-
     }
 
     public interface ButtonBarListener {
